@@ -7,6 +7,12 @@ export default {
             store
         }
 
+    },
+    methods: {
+        // FARE IL METODO PER FILTRARE  SULL ARRAY E IN HTML CICLARE DIRETTAMENTE SULLA FUNZIONE METTERE IL RETURN []
+    },
+    mounted() {
+
     }
 }
 
@@ -14,18 +20,15 @@ export default {
 <template>
     <main>
         <div class="container">
-            <select name="" id="" class="mb-3">
-                <option value="">Alien</option>
-            </select>
-            <div class="row justify-content-center  bg-white p-2 gap-2 ">
-                <div class="bg-black text-white">
+            <div class="row justify-content-center bg-white p-2 gap-2 ">
+                <div class="bg-black text-white p-2">
                     <p v-show="this.store.cards.length" class="m-0">Found {{ this.store.cards.length }} cards</p>
                 </div>
-                <div v-if="this.store.cards < 50"><img src="../assets/Spinner-1s-200px.gif" alt=""></div>
-                <div id="Cards" class="bg-Coral text-center p-0" v-if="this.store.cards.length === 50"
+                <div v-show="this.store.loading" ><img src="../assets/Spinner-1s-200px.gif" alt=""></div>
+                <div id="Cards" class="bg-Coral text-center p-0" v-show="!this.store.loading"
                     v-for="(card, i) in this.store.cards">
                     <img class="img-fluid" :src="card.card_images[0].image_url" alt="">
-                    <p class="text-white">{{ card.name }}</p>
+                    <p class="text-white ">{{ card.name }}</p>
                     <span>{{ card.archetype }}</span>
                 </div>
             </div>

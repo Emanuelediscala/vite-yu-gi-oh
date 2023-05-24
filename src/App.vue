@@ -4,6 +4,7 @@ import AppContent from "./components/AppContent.vue"
 import AppFooter from "./components/Appfooter.vue"
 import {store} from "./components/data/store.js"
 import axios from 'axios';
+import { archtype } from "./components/data/store"
 
 export default {
   components: {
@@ -13,21 +14,28 @@ export default {
   },
   data() {
     return {
-   store
+   store,
+   archtype,
+   selectedType: "",
     }
   },
   methods: {
-    CardsLoaded() {
-                axios.get(this.store.urlApi).then((risposta => {
+    CardsLoaded(adress) {
+                axios.get(adress).then((risposta => {
                     this.store.cards = risposta.data.data;
+                    this.store.loading = false;
                     this.store.cards.num = this.store.cards[0].length 
                     console.log(this.store.cards);
-                }))
-            
+                }))        
+    },
+    SaveNewDate() {
+      let adress = this.archtype.apiUrl
+      this.CardsLoaded(adress);
     }
   },
   mounted() {
-    this.CardsLoaded()
+    this.CardsLoaded(this.store.urlApi)
+    this.SaveNewDate(this.archtype.urlApi)
   }
 }
 
@@ -35,6 +43,9 @@ export default {
 
 <template>
   <AppHeader />
+  <select name="" id="" class="my-3 p-1" v-model="selectedType">
+        <option v-for="validtype in this.archtype.types" value="">{{ validtype }}</option>
+  </select>
   <AppContent />
   <AppFooter  />
 
