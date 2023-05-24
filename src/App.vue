@@ -34,22 +34,7 @@ export default {
         this.archtype.types = risposta.data;
         this.archtype.loading = false;
       }))
-    },
-    ChangeCards() {
-      let trovata = false
-      let indirizzo = this.archtype.urlApis
-      for (let i = 0; i < store.cards.length; i++) {
-        if (this.selectedType == store.cards[i].archetype) {
-          trovata = true
-        } else {
-          this.CardsLoaded
-        }
-      }
-      if (trovata) {
-        indirizzo = this.archtype.urlGetCardsByArchetype + this.selectedType;
-        this.SaveNewDate(indirizzo)
     }
-    } 
   },
   computed: {  
         filterCards() {
@@ -72,7 +57,7 @@ export default {
 
 <template>
   <AppHeader />
-  <select @change="ChangeCards" name="" id="" class="my-3 p-1" v-model="selectedType">
+  <select @change="filterCards" name="" id="" class="my-3 p-1" v-model="selectedType">
     <option v-for="validtype in archtype.types" :value="validtype.archetype_name">{{ validtype.archetype_name }}</option>
   </select>
   <AppContent />
