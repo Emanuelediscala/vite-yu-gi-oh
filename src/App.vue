@@ -2,7 +2,7 @@
 import AppHeader from "./components/AppHeader.vue"
 import AppContent from "./components/AppContent.vue"
 import AppFooter from "./components/Appfooter.vue"
-import {store} from "./components/data/store.js"
+import { store } from "./components/data/store.js"
 import axios from 'axios';
 import { archtype } from "./components/data/store"
 
@@ -14,28 +14,57 @@ export default {
   },
   data() {
     return {
-   store,
-   archtype,
-   selectedType: "",
+      store,
+      archtype,
+      selectedType: null,
     }
   },
   methods: {
     CardsLoaded(adress) {
-                axios.get(adress).then((risposta => {
-                    this.store.cards = risposta.data.data;
-                    this.store.loading = false;
-                    this.store.cards.num = this.store.cards[0].length 
-                    console.log(this.store.cards);
-                }))        
+      axios.get(adress).then((risposta => {
+        this.store.cards = risposta.data.data;
+        this.store.loading = false;
+        this.store.cards.num = this.store.cards[0].length
+    console.log(this.store.cards)
+      }))
     },
-    SaveNewDate() {
-      let adress = this.archtype.apiUrl
-      this.CardsLoaded(adress);
+    SaveNewDate(adress) {
+      console.log(adress);
+      axios.get(adress).then((risposta => {
+        this.archtype.types = risposta.data;
+        this.archtype.loading = false;
+      }))
+    },
+    ChangeCards() {
+      let trovata = false
+      let indirizzo = this.archtype.urlApis
+      for (let i = 0; i < store.cards.length; i++) {
+        if (this.selectedType == store.cards[i].archetype) {
+          trovata = true
+        } else {
+          this.CardsLoaded
+        }
+      }
+      if (trovata) {
+        indirizzo = this.archtype.urlGetCardsByArchetype + this.selectedType;
+        this.SaveNewDate(indirizzo)
     }
+    } 
   },
+  computed: {  
+        filterCards() {
+            axios.get(this.archtype.urlGetCardsByArchetype + this.selectedType)
+            .then(r => {
+                this.store.cards = []
+                this.store.cards = r.data.data;
+                this.store.loading = false;
+            })
+          }
+        }, 
   mounted() {
     this.CardsLoaded(this.store.urlApi)
-    this.SaveNewDate(this.archtype.urlApi)
+    this.SaveNewDate(this.archtype.urlApis)
+    console.log(this.store.cards);
   }
 }
 
@@ -43,13 +72,11 @@ export default {
 
 <template>
   <AppHeader />
-  <select name="" id="" class="my-3 p-1" v-model="selectedType">
-        <option v-for="validtype in this.archtype.types" value="">{{ validtype }}</option>
+  <select @change="ChangeCards" name="" id="" class="my-3 p-1" v-model="selectedType">
+    <option v-for="validtype in archtype.types" :value="validtype.archetype_name">{{ validtype.archetype_name }}</option>
   </select>
   <AppContent />
-  <AppFooter  />
-
-    
+  <AppFooter />
 </template>
 
 <style lang="scss" scoped>
